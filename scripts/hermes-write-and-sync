@@ -1,0 +1,60 @@
+#!/usr/bin/env sh
+
+set -eu
+
+if [ "$#" -ne 2 ]; then
+	printf '%s\n' 'Usage: hermes-write-and-sync RELATIVE_MARKDOWN_PATH "Commit message"' >&2
+	exit 64
+fi
+
+note_path=$1
+commit_message=$2
+repository_root=$(git rev-parse --show-toplevel)
+operation_lock="$repository_root/.git/hermes-write-and-sync.lock"
+
+case "$note_path" in
+	/* | ../* | */../*)
+		printf '%s\n' 'The target must be a relative Markdown path inside the vault.' >&2
+		exit 64
+		;;
+	*)
+		;;
+esac
+
+case "$note_path" in
+	*.md)
+		;;
+	*)
+		printf '%s\n' 'The target must have the .md extension.' >&2
+		exit 64
+		;;
+esac
+
+if [ ! -f "$repository_root/$note_path" ]; then
+	printf '%s\n' 'The target Markdown file does not exist.' >&2
+	exit 66
+fi
+
+if ! mkdir "$operation_lock" 2>/dev/null; then
+	printf '%s\n' 'Another Hermes write-and-sync operation is running.' >&2
+	exit 75
+fi
+
+cleanup() {
+	rmdir "$operation_lock" 2>/dev/null || true
+}
+
+trap cleanup EXIT HUP INT TERM
+
+CL_QMD_REQUIRED=1 "$repository_root/scripts/qmd-refresh"
+
+cd "$repository_root"
+git add -- "$note_path"
+
+if git diff --cached --quiet -- "$note_path"; then
+	printf '%s\n' 'The requested note has no staged changes; nothing to commit.'
+	exit 0
+fi
+
+CL_QMD_SKIP_POST_COMMIT=1 git commit --only -m "$commit_message" -- "$note_path"
+git push

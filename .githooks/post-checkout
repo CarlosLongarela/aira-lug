@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+set -eu
+
+old_head=$1
+new_head=$2
+is_branch_checkout=$3
+
+if [ "$is_branch_checkout" != "1" ] || [ "$old_head" = "$new_head" ]; then
+	exit 0
+fi
+
+repository_root=$(git rev-parse --show-toplevel)
+exec "$repository_root/scripts/qmd-refresh"

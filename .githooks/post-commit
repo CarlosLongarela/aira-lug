@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+set -eu
+
+if [ "${CL_QMD_SKIP_POST_COMMIT:-}" = "1" ]; then
+	exit 0
+fi
+
+repository_root=$(git rev-parse --show-toplevel)
+exec "$repository_root/scripts/qmd-refresh"

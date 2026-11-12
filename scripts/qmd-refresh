@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+
+set -eu
+
+repository_root=$(git rev-parse --show-toplevel)
+lock_directory="$repository_root/.git/qmd-refresh.lock"
+
+if ! command -v qmd >/dev/null 2>&1; then
+	printf '%s\n' 'QMD is not available in PATH; index refresh skipped.' >&2
+	if [ "${CL_QMD_REQUIRED:-}" = "1" ]; then
+		exit 127
+	fi
+	exit 0
+fi
+
+if ! mkdir "$lock_directory" 2>/dev/null; then
+	printf '%s\n' 'A QMD refresh is already running; this event will be reconciled later.' >&2
+	exit 0
+fi
+
+cleanup() {
+	rmdir "$lock_directory" 2>/dev/null || true
+}
+
+trap cleanup EXIT HUP INT TERM
+
+cd "$repository_root"
+qmd update
+qmd embed
+qmd status
