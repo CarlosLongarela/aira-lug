@@ -1,7 +1,7 @@
 # AIra Lug: cerebro digital local
 
 ## AVISO IMPORTANTE
-Software y concepto aún en fase de desarrollo.
+**Software y concepto aún en fase de desarrollo.**
 
 **AIra Lug** es un cerebro digital personal: una [eira o aira](https://gl.wikipedia.org/wiki/Eira), el espacio gallego donde se reunía, se trabajaba y se separaba el grano valioso, unido a [Lug](https://es.wikipedia.org/wiki/Lug), figura celta asociada a las artes, las ciencias y las habilidades. Un lugar para convertir información dispersa en conocimiento útil, conectado y propio.
 
