@@ -10,6 +10,39 @@ Esta guía prepara AIra Lug como un vault de Obsidian versionado en un repositor
 
 El vault Markdown es la fuente de verdad. El índice y los embeddings de QMD son locales en cada equipo y no se suben al repositorio.
 
+## Instalación rápida
+
+El instalador comprueba si están **Git**, **Obsidian**, **QMD** (con Node.js 22 o superior) y **Hermes Agent**. Para cada programa que no encuentre, pregunta si quieres instalarlo; la respuesta por defecto es **Sí** (pulsa Intro) y puedes responder **N** para omitirlo.
+
+**Windows (PowerShell):**
+
+```powershell
+irm https://raw.githubusercontent.com/CarlosLongarela/aira-lug/main/install/install.ps1 | iex
+```
+
+**macOS y Linux (terminal):**
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/CarlosLongarela/aira-lug/main/install/install.sh | bash
+```
+
+Qué usa en cada sistema:
+
+| Programa | Windows | macOS | Linux |
+| --- | --- | --- | --- |
+| Git | `winget` | Homebrew | apt, dnf, pacman o zypper |
+| Obsidian | `winget` | Homebrew (cask) | Flatpak (Flathub) o Snap |
+| Node.js (requisito de QMD) | `winget` (LTS) | Homebrew | nvm (LTS, sin sudo) |
+| QMD | `npm install -g @tobilu/qmd` | ídem + `sqlite` de Homebrew | ídem |
+| Hermes Agent | [instalador oficial](https://hermes-agent.nousresearch.com/docs/getting-started/installation) `install.ps1` | instalador oficial `install.sh` | instalador oficial `install.sh` |
+
+Notas:
+
+- En macOS, si no está Homebrew, el instalador pregunta antes de instalarlo.
+- En Windows, la instalación nativa de Hermes está en fase beta según Nous Research; la alternativa probada es WSL2 ejecutando el comando de macOS/Linux dentro de Ubuntu.
+- Al terminar, abre una terminal nueva para que el `PATH` actualizado tenga efecto.
+- Antes de ejecutar un script remoto puedes revisarlo en [install/](install/). Los pasos manuales equivalentes se describen a continuación.
+
 ## Arquitectura y criterio de actualización
 
 | Componente | Función | Acceso de Hermes |
